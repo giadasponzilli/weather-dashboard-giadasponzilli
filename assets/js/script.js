@@ -63,7 +63,25 @@ $("#search-form").on("submit", function (e) {
                 })
                 .then(function (data) {
                     console.log(data)
+                    
+                    function todayWeather() {
 
+                    $(`#today`).empty();
+                    // INFO about city, date, icon and current temperature, wind, humidity.
+                    const todayCity = $(`<h2>`).text(data.name)
+                    const todayDate = dayjs().format(` (D/MM/YYYY)`)
+                    const iconWeather = $(`<img>`).attr(`src`, `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`)
+                    // console.log(data.weather[0].icon)
+                    $(`#today`).append(todayCity);
+                    todayCity.append(todayDate, iconWeather);
+
+                    const todayCityTemp = $(`<div class = temp>`).text(`Temp: ${data.main.temp}° C`)
+                    const todayCityWind = $(`<div class = wind>`).text(`Wind ${data.wind.speed} KPH`)
+                    const todayCityHumidity = $(`<div class = humidity>`).text(`Humidity: ${data.main.humidity}%`)
+                    $(`#today`).append(todayCityTemp, todayCityWind, todayCityHumidity);
+                    }
+                    todayWeather()
+                    
                     // citiesNames.push(userInputCity)
 
                     // renderButton();
