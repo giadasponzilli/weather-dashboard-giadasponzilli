@@ -24,55 +24,74 @@ const apiURL = `https://api.openweathermap.org/data/2.5/weather?`;
 
 // API key
 const APIKey = "0e30f3273392b0602beedb3cf58693bd";
-let userInputCity = "";
-let queryURL;
+let citiesNames = [];
+
+// let userInputCity = "";
+// let queryURL;
 
 
 $("#search-form").on("submit", function (e) {
     e.preventDefault();
+    
+    
+    let userInputCity = $("#search-input").val().trim();
+    
+    // URL we need to query the database
+    let queryURL = `${apiURL}q=${userInputCity}&appid=${APIKey}`;
 
-// URL we need to query the database
-
-userInputCity = $("#search-input").val();
-
-queryURL = `${apiURL}q=${userInputCity}&appid=${APIKey}`;
-
-console.log('query: ', queryURL)
-
-
-
-// This queryURL grabs the coordinates of the specified city to use in the newQueryUrl and then we grab the data from the newQueryUrl. This is beacuse the queryURL system of getting data from the website is deprecated.
-
-// We then created a Fetch call
-fetch(queryURL)
-    .then(function (response) {
-        return response.json();
-    })
-    .then(function (data) {
+    // console.log('query: ', queryURL)
 
 
-        // Added metric parameter to use Celsius Degree
 
-        const newQueryUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${data.coord.lat}&lon=${data.coord.lon}&units=metric&appid=${APIKey}`
+    // This queryURL grabs the coordinates of the specified city to use in the newQueryUrl and then we grab the data from the newQueryUrl. This is beacuse the queryURL system of getting data from the website is deprecated.
 
-        fetch(newQueryUrl)
-            .then(function (response) {
-                return response.json()
+    // We then created a Fetch call
+    fetch(queryURL)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+
+
+            // Added metric parameter to use Celsius Degree
+
+            const newQueryUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${data.coord.lat}&lon=${data.coord.lon}&units=metric&appid=${APIKey}`
+
+            fetch(newQueryUrl)
+                .then(function (response) {
+                    return response.json()
+                })
+                .then(function (data) {
+                    console.log(data)
+
+                    // citiesNames.push(userInputCity)
+
+                    // renderButton();
+                    
+                })
+                
+                .catch(function (error) {
+                    console.error('Error during fetch:', error);
+                })
+                
+                console.log('query: ', newQueryUrl)
+                
             })
-            .then(function (data) {
-                console.log(data)
-            })
-
+            
             .catch(function (error) {
                 console.error('Error during fetch:', error);
-            })  
+            });
             
-        console.log('query: ', newQueryUrl)
+        })
 
-    })
 
-    .catch(function (error) {
-        console.error('Error during fetch:', error);
-    });
-    
-})
+        // function renderButton() {
+
+        //     $("#history").empty();
+
+        //     $.each(citiesNames, function (i, userInput) {
+        //         const createButton = $("<button>").text(`${data.name}`)
+        //         $(`#history`).append(createButton)
+        //     })
+
+        // }
