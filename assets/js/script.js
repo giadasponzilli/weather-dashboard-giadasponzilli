@@ -32,10 +32,10 @@ let citiesNames = [];
 
 $("#search-form").on("submit", function (e) {
     e.preventDefault();
-    
-    
+
+
     let userInputCity = $("#search-input").val().trim();
-    
+
     // URL we need to query the database
     let queryURL = `${apiURL}q=${userInputCity}&appid=${APIKey}`;
 
@@ -63,53 +63,90 @@ $("#search-form").on("submit", function (e) {
                 })
                 .then(function (data) {
                     console.log(data)
-                    
+
                     function todayWeather() {
 
-                    $(`#today`).empty();
-                    // INFO about city, date, icon and current temperature, wind, humidity.
-                    const todayCity = $(`<h2>`).text(data.name)
-                    const todayDate = dayjs().format(` (D/MM/YYYY)`)
-                    const iconWeather = $(`<img>`).attr(`src`, `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`)
-                    // console.log(data.weather[0].icon)
-                    $(`#today`).append(todayCity);
-                    todayCity.append(todayDate, iconWeather);
+                        $(`#today`).empty();
+                        // INFO about city, date, icon and current temperature, wind, humidity.
+                        const todayCity = $(`<h2>`).text(data.name)
+                        const todayDate = dayjs().format(` (D/MM/YYYY)`)
+                        const iconWeather = $(`<img>`).attr(`src`, `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`)
+                        // console.log(data.weather[0].icon)
+                        $(`#today`).append(todayCity);
+                        todayCity.append(todayDate, iconWeather);
 
-                    const todayCityTemp = $(`<div class = temp>`).text(`Temp: ${data.main.temp}° C`)
-                    const todayCityWind = $(`<div class = wind>`).text(`Wind ${data.wind.speed} KPH`)
-                    const todayCityHumidity = $(`<div class = humidity>`).text(`Humidity: ${data.main.humidity}%`)
-                    $(`#today`).append(todayCityTemp, todayCityWind, todayCityHumidity);
+                        const todayCityTemp = $(`<div class = temp>`).text(`Temp: ${data.main.temp}° C`)
+                        const todayCityWind = $(`<div class = wind>`).text(`Wind ${data.wind.speed} KPH`)
+                        const todayCityHumidity = $(`<div class = humidity>`).text(`Humidity: ${data.main.humidity}%`)
+                        $(`#today`).append(todayCityTemp, todayCityWind, todayCityHumidity);
                     }
                     todayWeather()
-                    
+
                     // citiesNames.push(userInputCity)
 
                     // renderButton();
-                    
+
                 })
-                
+
                 .catch(function (error) {
                     console.error('Error during fetch:', error);
                 })
+
+            console.log('query: ', newQueryUrl)
+
+
+
+
+
+
+
+
+
+            const fiveDaysQueryUrl = `https://api.openweathermap.org/data/2.5/forecast/?lat=${data.coord.lat}&lon=${data.coord.lon}&units=metric&cnt=40&appid=${APIKey}`
+
+
+            fetch(fiveDaysQueryUrl)
+                .then(function (response) {
+                    return response.json()
+                })
+                .then(function (newData) {
+                    console.log(newData)
+
+                const divCard = $(`<div class = card>`)
+                const divCardBody =$(`<div class="card-body">`)
                 
-                console.log('query: ', newQueryUrl)
                 
-            })
-            
-            .catch(function (error) {
-                console.error('Error during fetch:', error);
-            });
-            
+                divCardBody.text(newData.list[7].main.temp)
+
+
+                $(`#forecast`).append(divCard, divCardBody)
+
+
+                })
+
+                .catch(function (error) {
+                    console.error('Error during fetch:', error);
+                })
+
         })
 
+        .catch(function (error) {
+            console.error('Error during fetch:', error);
+        });
 
-        // function renderButton() {
+})
 
-        //     $("#history").empty();
 
-        //     $.each(citiesNames, function (i, userInput) {
-        //         const createButton = $("<button>").text(`${data.name}`)
-        //         $(`#history`).append(createButton)
-        //     })
 
-        // }
+
+
+// function renderButton() {
+
+//     $("#history").empty();
+
+//     $.each(citiesNames, function (i, userInput) {
+//         const createButton = $("<button>").text(`${data.name}`)
+//         $(`#history`).append(createButton)
+//     })
+
+// }
