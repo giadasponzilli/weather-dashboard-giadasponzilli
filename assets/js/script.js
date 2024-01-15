@@ -29,7 +29,7 @@ let citiesNames = [];
 // let userInputCity = "";
 // let queryURL;
 
-
+function tryT() {
 $("#search-form").on("submit", function (e) {
     e.preventDefault();
 
@@ -82,9 +82,20 @@ $("#search-form").on("submit", function (e) {
                     }
                     todayWeather()
 
-                    // citiesNames.push(userInputCity)
+                    const cityName = data.name
 
-                    // renderButton();
+                    if (!citiesNames.includes(cityName)) {
+
+                        citiesNames.push(cityName)
+
+                        renderButton(cityName);
+
+                    }
+
+                    // clearing the search input field from previous search
+                    $(`#search-input`).val(``);
+
+                    console.log(`citiesNames ${citiesNames}`)
 
                 })
 
@@ -108,27 +119,29 @@ $("#search-form").on("submit", function (e) {
                     .then(function (newData) {
                         console.log(newData)
 
+                        $(`#forecastTitle`).empty();
+
                         const forecastText = $(`<h4>`).text(`5-Day Forecast:`)
                         $(`#forecastTitle`).append(forecastText)
-                        
+
                         let forecastDatePlus24 = dayjs().add(1, `day`);
 
                         for (let i = 7; i < newData.list.length; i += 8) {
                             const divCard = $(`<div class = card>`);
                             const divCardBody = $(`<div class="card-body">`);
-                            
+
                             const pForecastDatePlus24 = $(`<h5>`).text(forecastDatePlus24.format(`D/MM/YYYY`));
-                            
+
                             forecastDatePlus24 = forecastDatePlus24.add(1, `day`);
 
                             const forecastIcon = $(`<img>`).attr(`src`, `https://openweathermap.org/img/wn/${newData.list[i].weather[0].icon}@2x.png`);
-                            
+
                             const forecastTemp = $(`<p>`).text(`Temp: ${newData.list[i].main.temp}° C`);
-                            
+
                             const forecastWind = $(`<p>`).text(`Wind: ${newData.list[i].wind.speed} KPH`);
-                            
+
                             const forecastHumidity = $(`<p>`).text(`Humidity: ${newData.list[i].main.humidity}%`);
-                            
+
                             divCardBody.append(pForecastDatePlus24, forecastIcon, forecastTemp, forecastWind, forecastHumidity);
                             divCard.append(divCardBody);
                             $(`#forecast`).append(divCard);
@@ -149,17 +162,19 @@ $("#search-form").on("submit", function (e) {
 
 })
 
+function renderButton(cityName) {
+    
+    const createButton = $("<button class = buttonCity>").text(`${cityName}`)
+    $(`#history`).append(createButton)
+    
+}
+
+}
 
 
 
+$(".buttonCity").on("click", function () {
+    tryT()
+})    
 
-// function renderButton() {
-
-//     $("#history").empty();
-
-//     $.each(citiesNames, function (i, userInput) {
-//         const createButton = $("<button>").text(`${data.name}`)
-//         $(`#history`).append(createButton)
-//     })
-
-// }
+tryT()
