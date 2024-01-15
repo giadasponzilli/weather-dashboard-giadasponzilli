@@ -76,7 +76,7 @@ $("#search-form").on("submit", function (e) {
                         todayCity.append(todayDate, iconWeather);
 
                         const todayCityTemp = $(`<div class = temp>`).text(`Temp: ${data.main.temp}° C`)
-                        const todayCityWind = $(`<div class = wind>`).text(`Wind ${data.wind.speed} KPH`)
+                        const todayCityWind = $(`<div class = wind>`).text(`Wind: ${data.wind.speed} KPH`)
                         const todayCityHumidity = $(`<div class = humidity>`).text(`Humidity: ${data.main.humidity}%`)
                         $(`#today`).append(todayCityTemp, todayCityWind, todayCityHumidity);
                     }
@@ -112,15 +112,26 @@ $("#search-form").on("submit", function (e) {
                 .then(function (newData) {
                     console.log(newData)
 
-                const divCard = $(`<div class = card>`)
-                const divCardBody =$(`<div class="card-body">`)
+                const divCard = $(`<div class = card>`);
+                const divCardBody =$(`<div class="card-body">`);
                 
+                const forecastDatePlus24 = dayjs().add(1, `day`).format(`D/MM/YYYY`);
+
+                const pForecastDatePlus24 = $(`<p>`).text(forecastDatePlus24);
+
+                const forecastIcon = $(`<img>`).attr(`src`, `https://openweathermap.org/img/wn/${newData.list[7].weather[0].icon}@2x.png`);
                 
-                divCardBody.text(newData.list[7].main.temp)
+                const forecastTemp = $(`<p>`).text(`Temp: ${newData.list[7].main.temp}° C`);
 
+                const forecastWind = $(`<p>`).text(`Wind: ${newData.list[7].wind.speed} KPH`);
 
-                $(`#forecast`).append(divCard, divCardBody)
+                const forecastHumidity = $(`<p>`).text(`Humidity: ${newData.list[7].main.humidity}%`);
 
+                divCardBody.append(pForecastDatePlus24, forecastIcon,forecastTemp, forecastWind, forecastHumidity);
+
+                divCard.append(divCardBody);
+
+                $(`#forecast`).append(divCard);
 
                 })
 
