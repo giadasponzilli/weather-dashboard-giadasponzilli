@@ -94,7 +94,7 @@ $("#search-form").on("submit", function (e) {
 
             console.log('query: ', newQueryUrl)
 
-            
+
             function forecast() {
                 $(`#forecast`).empty();
 
@@ -108,6 +108,9 @@ $("#search-form").on("submit", function (e) {
                     .then(function (newData) {
                         console.log(newData)
 
+                        const forecastText = $(`<h4>`).text(`5-Day Forecast:`)
+                        $(`#forecastTitle`).append(forecastText)
+                        
                         let forecastDatePlus24 = dayjs().add(1, `day`);
 
                         for (let i = 7; i < newData.list.length; i += 8) {
