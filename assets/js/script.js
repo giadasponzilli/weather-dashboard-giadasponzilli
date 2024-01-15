@@ -94,50 +94,49 @@ $("#search-form").on("submit", function (e) {
 
             console.log('query: ', newQueryUrl)
 
+            
+            function forecast() {
+                $(`#forecast`).empty();
+
+                const fiveDaysQueryUrl = `https://api.openweathermap.org/data/2.5/forecast/?lat=${data.coord.lat}&lon=${data.coord.lon}&units=metric&cnt=40&appid=${APIKey}`
 
 
+                fetch(fiveDaysQueryUrl)
+                    .then(function (response) {
+                        return response.json()
+                    })
+                    .then(function (newData) {
+                        console.log(newData)
 
+                        let forecastDatePlus24 = dayjs().add(1, `day`);
 
+                        for (let i = 7; i < newData.list.length; i += 8) {
+                            const divCard = $(`<div class = card>`);
+                            const divCardBody = $(`<div class="card-body">`);
+                            
+                            const pForecastDatePlus24 = $(`<h5>`).text(forecastDatePlus24.format(`D/MM/YYYY`));
+                            
+                            forecastDatePlus24 = forecastDatePlus24.add(1, `day`);
 
+                            const forecastIcon = $(`<img>`).attr(`src`, `https://openweathermap.org/img/wn/${newData.list[i].weather[0].icon}@2x.png`);
+                            
+                            const forecastTemp = $(`<p>`).text(`Temp: ${newData.list[i].main.temp}° C`);
+                            
+                            const forecastWind = $(`<p>`).text(`Wind: ${newData.list[i].wind.speed} KPH`);
+                            
+                            const forecastHumidity = $(`<p>`).text(`Humidity: ${newData.list[i].main.humidity}%`);
+                            
+                            divCardBody.append(pForecastDatePlus24, forecastIcon, forecastTemp, forecastWind, forecastHumidity);
+                            divCard.append(divCardBody);
+                            $(`#forecast`).append(divCard);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Error during fetch:', error);
+                    })
+            }
 
-
-
-            const fiveDaysQueryUrl = `https://api.openweathermap.org/data/2.5/forecast/?lat=${data.coord.lat}&lon=${data.coord.lon}&units=metric&cnt=40&appid=${APIKey}`
-
-
-            fetch(fiveDaysQueryUrl)
-                .then(function (response) {
-                    return response.json()
-                })
-                .then(function (newData) {
-                    console.log(newData)
-
-                const divCard = $(`<div class = card>`);
-                const divCardBody =$(`<div class="card-body">`);
-                
-                const forecastDatePlus24 = dayjs().add(1, `day`).format(`D/MM/YYYY`);
-
-                const pForecastDatePlus24 = $(`<p>`).text(forecastDatePlus24);
-
-                const forecastIcon = $(`<img>`).attr(`src`, `https://openweathermap.org/img/wn/${newData.list[7].weather[0].icon}@2x.png`);
-                
-                const forecastTemp = $(`<p>`).text(`Temp: ${newData.list[7].main.temp}° C`);
-
-                const forecastWind = $(`<p>`).text(`Wind: ${newData.list[7].wind.speed} KPH`);
-
-                const forecastHumidity = $(`<p>`).text(`Humidity: ${newData.list[7].main.humidity}%`);
-
-                divCardBody.append(pForecastDatePlus24, forecastIcon,forecastTemp, forecastWind, forecastHumidity);
-
-                divCard.append(divCardBody);
-
-                $(`#forecast`).append(divCard);
-
-                })
-
-                .catch(function (error) {
-                    console.error('Error during fetch:', error);
-                })
+            forecast()
 
         })
 
