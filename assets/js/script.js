@@ -59,7 +59,7 @@ function userInputApi() {
                         return response.json()
                     })
                     .then(function (data) {
-                        console.log(data)
+                        // console.log(data)
 
                         todayWeather(data)
 
@@ -84,7 +84,8 @@ function userInputApi() {
                         console.error('Error during fetch:', error);
                     })
 
-                console.log('query: ', newQueryUrl)
+                // console.log('query: ', newQueryUrl)
+
                 forecast(data)
             })
             .catch(function (error) {
@@ -156,7 +157,7 @@ function forecast(data) {
             return response.json()
         })
         .then(function (newData) {
-            console.log(newData)
+            // console.log(newData)
 
             $(`#forecastTitle`).empty();
 

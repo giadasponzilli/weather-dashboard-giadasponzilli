@@ -2,15 +2,11 @@
   background: linear-gradient(to right, #3462BA, #2B3988);
 }
 
-.weather-search {
-  width: 320px;
-  height: 40px;
-  margin-bottom: 10px;
-}
+/* .weather-search {
+} */
 
 #search-button {
   background-color: #5098E6;
-  width: 320px;
   border-radius: 5px;
   font-weight: 500;
 }
