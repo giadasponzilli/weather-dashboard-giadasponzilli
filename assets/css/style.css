@@ -1,0 +1,56 @@
+.weather-header {
+  background: linear-gradient(to right, #3462BA, #2B3988);
+}
+
+.weather-search {
+  width: 320px;
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+#search-button {
+  background-color: #5098E6;
+  width: 320px;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+/* hr {
+  border: 2px solid black;
+  width: 320px;
+} */
+
+.buttonCity {
+  background-color: rgb(216, 216, 216);
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid rgb(161, 161, 161);
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.todayContainerDiv {
+border: 2px solid black;
+padding: 10px;
+}
+
+#today .temp, .wind, .humidity {
+  margin:10px;
+}
+
+.imgIconForecast {
+  width: 60px;
+  height: 60px;
+}
+
+#forecastTitle {
+margin-top: 30px !important;
+}
+
+.card {
+  background-color: #2D3E50;
+  color: white;
+  margin: 5px;
+}
+
+

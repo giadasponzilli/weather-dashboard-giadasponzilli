@@ -127,16 +127,18 @@ function todayWeather(data) {
      // .empty() method ensures that the today id is clear from the previous city info.
     $(`#today`).empty();
     // INFO about city, date, icon and current temperature, wind, humidity.
+    const todayContainer = $(`<div class = todayContainerDiv>`)
     const todayCity = $(`<h2>`).text(data.name);
     const todayDate = dayjs().format(` (D/MM/YYYY)`);
-    const iconWeather = $(`<img>`).attr(`src`, `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`);
-    $(`#today`).append(todayCity);
+    const iconWeather = $(`<img class = imgIconForecast>`).attr(`src`, `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`);
+    $(`#today`).append(todayContainer);
+    todayContainer.append(todayCity);
     todayCity.append(todayDate, iconWeather);
 
     const todayCityTemp = $(`<div class = temp>`).text(`Temp: ${data.main.temp}° C`);
     const todayCityWind = $(`<div class = wind>`).text(`Wind: ${data.wind.speed} KPH`);
     const todayCityHumidity = $(`<div class = humidity>`).text(`Humidity: ${data.main.humidity}%`);
-    $(`#today`).append(todayCityTemp, todayCityWind, todayCityHumidity);
+    todayContainer.append(todayCityTemp, todayCityWind, todayCityHumidity);
 }
 
 
@@ -174,7 +176,7 @@ function forecast(data) {
 
                 forecastDatePlus24 = forecastDatePlus24.add(1, `day`);
 
-                const forecastIcon = $(`<img>`).attr(`src`, `https://openweathermap.org/img/wn/${newData.list[i].weather[0].icon}@2x.png`);
+                const forecastIcon = $(`<img class = imgIconForecast>`).attr(`src`, `https://openweathermap.org/img/wn/${newData.list[i].weather[0].icon}@2x.png`);
 
                 const forecastTemp = $(`<p>`).text(`Temp: ${newData.list[i].main.temp}° C`);
 
