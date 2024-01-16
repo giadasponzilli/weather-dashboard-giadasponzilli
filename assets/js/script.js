@@ -95,10 +95,10 @@ function userInputApi() {
 }
 
 // I didn't manage to get this working
-$(document).on("click", ".buttonCity", function () {
-    todayWeather(data);
-    forecast(data);
-});
+// $(document).on("click", ".buttonCity", function (cityName) {
+//     todayWeather(cityName);
+//     forecast(cityName);
+// });
 
 // This function creates buttons for each search
 function renderButton(cityName) {
