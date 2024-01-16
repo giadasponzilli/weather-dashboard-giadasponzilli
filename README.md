@@ -13,6 +13,9 @@ This app runs in the browser and features dynamically updated HTML and CSS power
 The code is deployed at https://giadasponzilli.github.io/weather-dashboard-giadasponzilli/
 
 ## Screenshots
+![Alt text](assets/images/screencapture-weatherapp-1.png)
+
+![Alt text](assets/images/screencapture-weatherapp-2.png)
 
 ## Installation
 
