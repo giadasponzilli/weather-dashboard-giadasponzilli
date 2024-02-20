@@ -26,79 +26,86 @@ When a user click on a city in the search history they are again presented with 
 const apiURL = `https://api.openweathermap.org/data/2.5/weather?`;
 // API key
 const APIKey = "0e30f3273392b0602beedb3cf58693bd";
-let citiesNames = [];
+let citiesSearch = [];
 
+function getInfo(city) {
 
-userInputApi();
+    let queryURL = `${apiURL}q=${city}&appid=${APIKey}`;
+
+    // This queryURL grabs the coordinates of the specified city to use in the newQueryUrl and then we grab the data from the newQueryUrl. This is beacuse the queryURL system of getting data from the website is deprecated.
+
+    // Create a Fetch call
+    fetch(queryURL)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+
+            // Added metric parameter to use Celsius Degree
+            const newQueryUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${data.coord.lat}&lon=${data.coord.lon}&units=metric&appid=${APIKey}`;
+
+            fetch(newQueryUrl)
+                .then(function (response) {
+                    return response.json()
+                })
+                .then(function (data) {
+                    // console.log(data)
+
+                    todayWeather(data)
+
+                    // If the the user inputs a new city name in the search field, the code pushes the cityName in the array citiesSearch and it calls the renderButton function to create a new button and finally saves the search in local storage.
+                    const cityName = data.name;
+
+                    if (!citiesSearch.includes(cityName)) {
+
+                        citiesSearch.push(cityName);
+
+                        renderButton(cityName);
+
+                        saveToLocalStorage();
+                    }
+
+                    // Clearing the search input field from previous search
+                    $(`#search-input`).val(``);
+
+                })
+
+                .catch(function (error) {
+                    console.error('Error during fetch:', error);
+                })
+
+            // console.log('query: ', newQueryUrl)
+
+            forecast(data)
+        })
+        .catch(function (error) {
+            console.error('Error during fetch:', error);
+        });
+}
+
 
 // Main function to get the data from the API and calls other functions.
-function userInputApi() {
-
+function userInput() {
+    
     $("#search-form").on("submit", function (e) {
         e.preventDefault();
-
+        
         let userInputCity = $("#search-input").val().trim();
-
-        // URL we need to query the database
-        let queryURL = `${apiURL}q=${userInputCity}&appid=${APIKey}`;
-
-        // This queryURL grabs the coordinates of the specified city to use in the newQueryUrl and then we grab the data from the newQueryUrl. This is beacuse the queryURL system of getting data from the website is deprecated.
-
-        // Create a Fetch call
-        fetch(queryURL)
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-
-                // Added metric parameter to use Celsius Degree
-                const newQueryUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${data.coord.lat}&lon=${data.coord.lon}&units=metric&appid=${APIKey}`;
-
-                fetch(newQueryUrl)
-                    .then(function (response) {
-                        return response.json()
-                    })
-                    .then(function (data) {
-                        // console.log(data)
-
-                        todayWeather(data)
-
-                        // If the the user inputs a new city name in the search field, the code pushes the cityName in the array citiesNames and it calls the renderButton function to create a new button and finally saves the search in local storage.
-                        const cityName = data.name;
-
-                        if (!citiesNames.includes(cityName)) {
-
-                            citiesNames.push(cityName);
-
-                            renderButton(cityName);
-
-                            saveToLocalStorage();
-                        }
-
-                        // Clearing the search input field from previous search
-                        $(`#search-input`).val(``);
-
-                    })
-
-                    .catch(function (error) {
-                        console.error('Error during fetch:', error);
-                    })
-
-                // console.log('query: ', newQueryUrl)
-
-                forecast(data)
-            })
-            .catch(function (error) {
-                console.error('Error during fetch:', error);
-            });
+        
+        getInfo(userInputCity)
+        
     })
 }
 
-// I didn't manage to get this working
-// $(document).on("click", ".buttonCity", function (cityName) {
-//     todayWeather(cityName);
-//     forecast(cityName);
-// });
+userInput();
+
+// Event listner for click on buttonCity
+$(document).on("click", ".buttonCity", function (event) {
+    console.log(event.target.textContent)
+    
+    getInfo(event.target.textContent)
+
+});
 
 // This function creates buttons for each search
 function renderButton(cityName) {
@@ -107,16 +114,16 @@ function renderButton(cityName) {
 }
 
 function saveToLocalStorage() {
-    localStorage.setItem(`citiesNames`, JSON.stringify(citiesNames));
+    localStorage.setItem(`citiesSearch`, JSON.stringify(citiesSearch));
 }
 
 // This function retrives info from local storage, so if the user refreshes the page the previous buttons persist.
 function loadFromLocalStorage() {
-    const storedCities = localStorage.getItem('citiesNames');
+    const storedCities = localStorage.getItem('citiesSearch');
     if (storedCities) {
-        citiesNames = JSON.parse(storedCities);
-        for (let i = 0; i < citiesNames.length; i++) {
-            renderButton(citiesNames[i]);
+        citiesSearch = JSON.parse(storedCities);
+        for (let i = 0; i < citiesSearch.length; i++) {
+            renderButton(citiesSearch[i]);
         }
     }
 }
@@ -124,7 +131,7 @@ loadFromLocalStorage();
 
 // Function for today weather info, includes city info, date, icon, temperature, wind and humidity.
 function todayWeather(data) {
-
+// console.log(data)
      // .empty() method ensures that the today id is clear from the previous city info.
     $(`#today`).empty();
     // INFO about city, date, icon and current temperature, wind, humidity.
@@ -149,6 +156,7 @@ function forecast(data) {
     // .empty() method ensures that the forecast id is clear from the previous city info.
     $(`#forecast`).empty();
 
+    // New fetch with a query URL with cnt=40 (40 Objects of data, total necessary for the next 5 days forecast)
     const fiveDaysQueryUrl = `https://api.openweathermap.org/data/2.5/forecast/?lat=${data.coord.lat}&lon=${data.coord.lon}&units=metric&cnt=40&appid=${APIKey}`
 
 
